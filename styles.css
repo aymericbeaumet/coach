@@ -69,7 +69,7 @@ html, body {
   width: 46px; height: 46px;
   border-radius: 14px;
   display: grid; place-items: center;
-  font-size: 20px; font-weight: 800; color: #0b1220;
+  font-size: 24px; font-weight: 800; color: #0b1220;
   background: var(--accent);
   box-shadow: 0 8px 22px -8px var(--accent);
 }
@@ -105,7 +105,8 @@ html, body {
   display: grid; place-items: center;
   overflow: hidden;
 }
-.player > * { grid-area: 1 / 1; width: 100%; aspect-ratio: 16 / 9; max-height: 100%; border: 0; }
+/* Zoom : on rogne ~15 % de chaque côté pour agrandir l'image (hauteur ↑). */
+.player > * { grid-area: 1 / 1; width: 143%; aspect-ratio: 16 / 9; border: 0; }
 .poster {
   background: #000 center/cover no-repeat;
   display: grid; place-items: center; cursor: pointer;
@@ -142,6 +143,17 @@ html, body {
   font-size: 13px; font-weight: 700;
 }
 
+/* Chrono (exercices en secondes), en haut à droite */
+.chrono {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: #fff; cursor: pointer; border: 0;
+  font-variant-numeric: tabular-nums;
+}
+.chrono .tdot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.chrono.running { background: var(--accent); color: #0b1220; }
+.chrono.running .tdot { background: #0b1220; animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+
 /* Compteur de séries, centré en bas (cliquable → décrémente jusqu'à 0) */
 .reps-badge {
   pointer-events: auto;
@@ -169,15 +181,14 @@ html, body {
 .reps-badge.done .rb-count { background: #052e13; color: var(--ok); }
 .reps-badge.done .rb-scheme small { color: #052e13cc; }
 
-.ex-head { width: 100%; pointer-events: none; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-.ex-name { margin: 0; font-size: 23px; font-weight: 800; line-height: 1.1; }
+.ex-head { width: 100%; pointer-events: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.ex-name { margin: 0; flex: 1; min-width: 0; font-size: 22px; font-weight: 800; line-height: 1.15; }
 .weight {
-  flex: 0 0 auto;
+  flex: 0 0 auto; margin-top: 2px;
   color: var(--accent); font-weight: 800; font-size: 14px;
   background: #f973161f; border: 1px solid #f9731640;
   padding: 5px 11px; border-radius: 999px; white-space: nowrap;
 }
-.note { margin: 8px 0 0; color: #cbd5e1; font-size: 14px; line-height: 1.45; pointer-events: none; }
 
 /* ---------- Écran de fin ---------- */
 .congrats {

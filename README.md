@@ -9,9 +9,12 @@ le tout de façon déterministe.
 - **Écran d'accueil** : deux sections (Kettlebell + Étirements) avec l'aperçu du jour,
   puis un bouton *Commencer*.
 - **Format court** : chaque exercice est un écran plein avec sa vidéo d'exemple
-  (lecture au tap). On **glisse verticalement** pour naviguer.
-- **Compteur de séries** : le badge en bas se tape pour décompter jusqu'à 0 ;
+  (autoplay muet + boucle ; image zoomée pour un meilleur rendu). On **glisse
+  verticalement** pour naviguer.
+- **Compteur de séries** : le badge centré en bas se tape pour décompter jusqu'à 0 ;
   à 0 l'exercice passe automatiquement au suivant. Un message de fin clôt la séance.
+- **Chrono** : sur les exercices en secondes, un minuteur en haut à droite peut être
+  lancé ; à 0 il décrémente le compteur de séries (usage optionnel).
 - **Sans état** : rafraîchir la page redémarre la séance depuis le début.
 - **Installable** sur iPhone : Partager → « Sur l'écran d'accueil ».
 - **Hors-ligne** : l'app shell est mise en cache par le service worker (`sw.js`).
@@ -21,7 +24,7 @@ le tout de façon déterministe.
 
 Kettlebell :
 - **Jour A — charnière + poussée** : swings, rowing australien, goblet squat, pompes, floor press, carry asymétrique.
-- **Jour B — jambes + dos** : turkish get-up, split squat bulgare, SDT roumain unilatéral, rowing un bras, pullover, gainage latéral.
+- **Jour B — jambes + dos** : turkish get-up, split squat bulgare, soulevé de terre roumain unilatéral, rowing un bras, pullover, gainage latéral.
 - **Jour C — récup active** : get-up, pullover, halos, carries, mobilité hanches/épaules.
 
 Étirements (Base tous les jours + le bloc du jour J1→J4) : chaîne postérieure, hanches,
@@ -33,6 +36,15 @@ Modifier le programme ou les vidéos : éditer les objets `PROGRAM` et `STRETCH`
 > Vidéos : YouTube exige depuis fin 2025 un referrer valide, sinon « Error 153 ».
 > L'iframe est donc créé avec `referrerpolicy="strict-origin-when-cross-origin"`
 > (+ `<meta name="referrer">`).
+
+## Développement local
+
+Ouvrir `index.html` en `file://` ne fonctionne pas (le service worker et les vidéos
+YouTube exigent une vraie origine http). Lancer un petit serveur :
+
+```sh
+./serve.sh          # http://localhost:8000
+```
 
 ## Icônes
 
