@@ -1,126 +1,172 @@
 'use strict';
 
 /* ---------------------------------------------------------------------------
- * Programme kettlebell — rotation A / B / C, déterministe.
- * Référence : le 8 août 2026 = Jour A. Chaque jour civil avance d'un cran.
+ * Coach — la séance du jour.
+ *   • Kettlebell : rotation A / B / C   (2026-08-08 = Jour A)
+ *   • Étirements : rotation J1 / J2 / J3 / J4   (2026-08-08 = J1)
+ * Rotations déterministes, +1 cran par jour civil.
+ * Aucun état conservé : rafraîchir redémarre la séance depuis le début.
  * ------------------------------------------------------------------------- */
 
 const PROGRAM = {
   A: {
-    title: 'Charnière + poussée',
-    subtitle: '',
-    accent: '#f97316',
+    title: 'Charnière + poussée', accent: '#f97316',
     exercises: [
       { name: 'Swings 2 mains', weight: '12 kg', reps: '10 × 10', detail: '1 série par minute', sets: 10,
-        note: 'Conditionnement + travail de charnière, pas de la force pure.', video: 'nkWkssEvo3A', q: 'kettlebell swing 2 mains technique' },
-      { name: 'Rowing australien', weight: '', reps: '3 × 10', detail: '', sets: 3,
-        note: 'Pieds surélevés sur une chaise dès que possible.', video: 'nB2sOQ7613Q', q: 'traction australienne rowing technique' },
+        note: 'Conditionnement + travail de charnière, pas de la force pure.', video: 'nkWkssEvo3A' },
+      { name: 'Rowing australien', weight: 'Poids du corps', reps: '3 × 10', detail: '', sets: 3,
+        note: 'Pieds surélevés sur une chaise dès que possible.', video: 'nB2sOQ7613Q' },
       { name: 'Goblet squat', weight: '12 kg', reps: '3 × 10', detail: 'tempo 3-1-1', sets: 3,
-        note: '3 s de descente, 1 s en bas, 1 s de montée.', video: '5z86H2vki_8', q: 'goblet squat kettlebell technique' },
-      { name: 'Pompes', weight: '', reps: '3 séries', detail: '', sets: 3,
-        note: "S'arrêter 2 reps avant l'échec — c'est ta poussée principale.", video: 'IODxDxX7oi4', q: 'pompes technique parfaite' },
+        note: '3 s de descente, 1 s en bas, 1 s de montée.', video: '5z86H2vki_8' },
+      { name: 'Pompes', weight: 'Poids du corps', reps: '3 séries', detail: '', sets: 3,
+        note: "S'arrêter 2 reps avant l'échec — c'est ta poussée principale.", video: 'IODxDxX7oi4' },
       { name: 'Floor press', weight: '12 kg', reps: '2 × 12 / bras', detail: '', sets: 2,
-        note: '', video: 'B340QckIfJM', q: 'floor press kettlebell un bras' },
+        note: '', video: 'B340QckIfJM' },
       { name: 'Carry asymétrique', weight: '12 / 6 kg', reps: '2 × 30 s', detail: '', sets: 2,
-        note: '12 kg d’un côté, 6 kg de l’autre.', video: 'iq5D5SU2Oq4', q: 'suitcase carry kettlebell technique' },
+        note: '12 kg d’un côté, 6 kg de l’autre.', video: 'iq5D5SU2Oq4' },
     ],
   },
   B: {
-    title: 'Jambes + dos',
-    subtitle: '',
-    accent: '#38bdf8',
+    title: 'Jambes + dos', accent: '#38bdf8',
     exercises: [
       { name: 'Turkish get-up', weight: '12 kg', reps: '5 × 1 / côté', detail: 'lent', sets: 5,
-        note: 'Lent et contrôlé, une répétition à la fois.', video: 'JFrItinMcyQ', q: 'turkish get up technique' },
+        note: 'Lent et contrôlé, une répétition à la fois.', video: 'JFrItinMcyQ' },
       { name: 'Split squat bulgare', weight: '12 kg', reps: '3 × 8 / côté', detail: '', sets: 3,
-        note: 'Pied arrière sur une chaise. Bien plus dur que la fente arrière.', video: 'eCJxHKDXBqk', q: 'split squat bulgare technique' },
+        note: 'Pied arrière sur une chaise. Bien plus dur que la fente arrière.', video: 'eCJxHKDXBqk' },
       { name: 'SDT roumain unilatéral', weight: '12 kg', reps: '3 × 10 / côté', detail: 'lent', sets: 3,
-        note: 'Soulevé de terre roumain sur une jambe, lent et gainé.', video: 'S8wkyvxNvac', q: 'soulevé de terre roumain unilatéral' },
+        note: 'Soulevé de terre roumain sur une jambe, lent et gainé.', video: 'S8wkyvxNvac' },
       { name: 'Rowing un bras', weight: '12 kg', reps: '3 × 15 / côté', detail: '', sets: 3,
-        note: '1 s de contraction en haut.', video: 'l5qelXL5nfs', q: 'rowing un bras kettlebell technique' },
+        note: '1 s de contraction en haut.', video: 'l5qelXL5nfs' },
       { name: 'Pullover', weight: '6 kg', reps: '3 × 15', detail: '', sets: 3,
-        note: '', video: 'tcHaHIQStsk', q: 'pullover haltère technique' },
-      { name: 'Gainage latéral', weight: '', reps: '2 × 30 s / côté', detail: '', sets: 2,
-        note: '', video: 'fIkpxa-kuIA', q: 'gainage latéral planche technique' },
+        note: '', video: 'tcHaHIQStsk' },
+      { name: 'Gainage latéral', weight: 'Poids du corps', reps: '2 × 30 s / côté', detail: '', sets: 2,
+        note: '', video: 'fIkpxa-kuIA' },
     ],
   },
   C: {
-    title: 'Récup active',
-    subtitle: '15 min',
-    accent: '#34d399',
+    title: 'Récup active · 15 min', accent: '#34d399',
     exercises: [
-      { name: 'Get-up', weight: '6 kg', reps: 'léger', detail: '', sets: 1,
-        note: 'Mobilité et contrôle.', video: 'JFrItinMcyQ', q: 'turkish get up léger' },
-      { name: 'Pullover', weight: '6 kg', reps: 'léger', detail: '', sets: 1,
-        note: '', video: 'tcHaHIQStsk', q: 'pullover haltère technique' },
-      { name: 'Halos', weight: '6 kg', reps: 'léger', detail: '', sets: 1,
-        note: 'Autour de la tête, lent, dans les deux sens.', video: 'Sci3lijQBmk', q: 'kettlebell halo technique' },
-      { name: 'Carries', weight: '', reps: 'marche', detail: '', sets: 1,
-        note: 'Marche lestée, gainage.', video: 'CiN1iw856rQ', q: 'farmer carry kettlebell' },
-      { name: 'Mobilité hanches / épaules', weight: '', reps: 'flow', detail: '', sets: 1,
-        note: 'Ouverture hanches et épaules.', video: 'gDG9QoYpqtU', q: 'mobilité hanches épaules routine' },
+      { name: 'Get-up', weight: '6 kg', reps: 'léger', detail: '', sets: 1, note: 'Mobilité et contrôle.', video: 'JFrItinMcyQ' },
+      { name: 'Pullover', weight: '6 kg', reps: 'léger', detail: '', sets: 1, note: '', video: 'tcHaHIQStsk' },
+      { name: 'Halos', weight: '6 kg', reps: 'léger', detail: '', sets: 1, note: 'Autour de la tête, lent, dans les deux sens.', video: 'Sci3lijQBmk' },
+      { name: 'Carries', weight: '6 kg', reps: 'marche', detail: '', sets: 1, note: 'Marche lestée, gainage.', video: 'CiN1iw856rQ' },
+      { name: 'Mobilité hanches / épaules', weight: 'Poids du corps', reps: 'flow', detail: '', sets: 1, note: 'Ouverture hanches et épaules.', video: 'gDG9QoYpqtU' },
     ],
   },
 };
 
-const LETTERS = ['A', 'B', 'C'];
-const REFERENCE = Date.UTC(2026, 7, 8); // 8 août 2026 → Jour A (index 0)
+/* Étirements — Base tous les jours + rotation J1 → J2 → J3 → J4. */
+const STRETCH = {
+  base: [
+    { name: 'Chat-vache', weight: '', reps: '10 reps', detail: 'très lentes, vertèbre par vertèbre', sets: 1,
+      note: 'Enroule et déroule la colonne segment par segment.', video: 'r43PNCct6Yw' },
+    { name: 'Étirement fléchisseur de hanche', weight: '', reps: '60 s / côté', detail: 'bassin rentré, fessier serré', sets: 2,
+      note: 'Rétroversion du bassin pour vraiment cibler le psoas.', video: 'WtTAT6lSm3E' },
+    { name: 'Squat profond tenu', weight: '', reps: '60 s', detail: 'talons au sol', sets: 1,
+      note: '', video: 'ss4R2g4mFVU' },
+  ],
+  days: {
+    J1: { title: 'Chaîne postérieure', subtitle: '« je me baisse »', exercises: [
+      { name: 'Jefferson curl', weight: '6 kg', reps: '5 reps', detail: '10 s pour dérouler, 10 s pour remonter', sets: 5,
+        note: 'Déroule vertèbre par vertèbre, charge légère et contrôlée.', video: 'ZWaI1jrtzOk' },
+      { name: 'Ischios jambe tendue sur chaise', weight: '', reps: '90 s / côté', detail: 'dos plat, bassin qui bascule', sets: 2,
+        note: 'Charnière de hanche — surtout pas le dos rond.', video: 'KY_TGLbgYMs' },
+      { name: 'Elephant walk', weight: '', reps: '60 s', detail: '', sets: 1, note: '', video: 'fnih_6w_JjA' },
+    ]},
+    J2: { title: 'Hanches', subtitle: '', exercises: [
+      { name: '90/90 assis', weight: '', reps: '60 s / côté', detail: "bascule d'un côté à l'autre", sets: 2, note: '', video: 'axHM6figGWY' },
+      { name: 'Pigeon', weight: '', reps: '60 s / côté', detail: '', sets: 2, note: '', video: 'YqNO0ImMtEY' },
+      { name: 'Grenouille', weight: '', reps: '60 s', detail: '', sets: 1, note: '', video: 'cszFKUXArjs' },
+    ]},
+    J3: { title: 'Dos + thoracique', subtitle: '', exercises: [
+      { name: 'Extension thoracique sur serviette', weight: '', reps: '90 s', detail: 'serviette roulée sous les omoplates', sets: 1, note: '', video: 'YoPs_HtL9tc' },
+      { name: 'Livre ouvert', weight: '', reps: '8 reps / côté', detail: 'couché sur le côté, genoux pliés', sets: 2,
+        note: 'On ouvre lentement le bras du dessus.', video: 'rDviWORCWEw' },
+      { name: 'Étirement dorsaux à genoux', weight: '', reps: '60 s / côté', detail: "mains loin devant, décalées d'un côté", sets: 2, note: '', video: 'X8ijXOFfYMQ' },
+      { name: 'Torsion lombaire allongée', weight: '', reps: '60 s / côté', detail: 'épaules au sol', sets: 2, note: '', video: 'cvCPeN6XjHs' },
+    ]},
+    J4: { title: 'Chevilles + épaules', subtitle: '', exercises: [
+      { name: 'Dorsiflexion genou au mur', weight: '', reps: '90 s / côté', detail: 'talon collé', sets: 2, note: '', video: 'cPN3-FR-clk' },
+      { name: 'Mollet tendu puis fléchi', weight: '', reps: '45 s + 45 s / côté', detail: 'tendu = jumeaux, fléchi = soléaire', sets: 2, note: '', video: 'RObBWavVFzI' },
+      { name: 'Dislocations à la serviette', weight: '', reps: '10 reps', detail: 'lentes', sets: 1, note: 'Prise large, bras tendus, très lent.', video: 'vP8YmmRMz6I' },
+      { name: 'Étirement pectoral au chambranle', weight: '', reps: '60 s / côté', detail: 'bras en L', sets: 2, note: '', video: 'Q6KfoKo0lSo' },
+    ]},
+  },
+};
 
-function dayLetter(date) {
-  const local = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
-  const diff = Math.round((local - REFERENCE) / 86400000);
-  return LETTERS[((diff % 3) + 3) % 3];
-}
+const LETTERS = ['A', 'B', 'C'];
+const JDAYS = ['J1', 'J2', 'J3', 'J4'];
+const REFERENCE = Date.UTC(2026, 7, 8); // 8 août 2026 → Jour A & J1
+const mod = (n, m) => ((n % m) + m) % m;
 
 const today = new Date();
-const letter = dayLetter(today);
+const diff = Math.round((Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) - REFERENCE) / 86400000);
+const letter = LETTERS[mod(diff, 3)];
+const jletter = JDAYS[mod(diff, 4)];
 const day = PROGRAM[letter];
-const tomorrow = new Date(today);
-tomorrow.setDate(today.getDate() + 1);
-const nextLetter = dayLetter(tomorrow);
-const total = day.exercises.length;
+const sday = STRETCH.days[jletter];
+const nextLetter = LETTERS[mod(diff + 1, 3)];
 
-/* ---------- Suivi des séries (localStorage, remis à zéro chaque jour) ---------- */
-const dateKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-const storeKey = `kb:${dateKey}:${letter}`;
-let done = {};
-try { done = JSON.parse(localStorage.getItem(storeKey)) || {}; } catch (_) { done = {}; }
-const persist = () => { try { localStorage.setItem(storeKey, JSON.stringify(done)); } catch (_) {} };
-const isDone = (ex, set) => !!(done[ex] && done[ex][set]);
-const toggle = (ex, set) => { done[ex] = done[ex] || {}; done[ex][set] = !done[ex][set]; persist(); };
+/* Refresh → on repart du haut. */
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
-/* ---------- Intro ---------- */
 document.documentElement.style.setProperty('--accent', day.accent);
+
+/* ---------- Intro : deux sections (Kettlebell + Étirements) ---------- */
 document.getElementById('date').textContent =
   today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-document.getElementById('badge').textContent = letter;
-document.getElementById('title').textContent = `Jour ${letter}`;
-document.getElementById('subtitle').textContent =
-  day.subtitle ? `${day.title} · ${day.subtitle}` : day.title;
+
+document.getElementById('kbBadge').textContent = letter;
+document.getElementById('kbTitle').textContent = `Kettlebell — Jour ${letter}`;
+document.getElementById('kbSub').textContent = day.title;
+document.getElementById('stBadge').textContent = jletter;
+document.getElementById('stTitle').textContent = `Étirements — ${jletter}`;
+document.getElementById('stSub').textContent =
+  sday.subtitle ? `Base + ${sday.title} ${sday.subtitle}` : `Base + ${sday.title}`;
 document.getElementById('tomorrow').textContent = `Demain : Jour ${nextLetter}`;
 
-const preview = document.getElementById('preview');
-day.exercises.forEach((ex) => {
-  const li = document.createElement('li');
-  const w = ex.weight ? ` · ${ex.weight}` : '';
-  li.innerHTML = `<span>${ex.name}</span><span>${ex.reps}${w}</span>`;
-  preview.appendChild(li);
-});
+function fillList(el, items) {
+  items.forEach((ex) => {
+    const li = document.createElement('li');
+    const w = ex.weight ? ` · ${ex.weight}` : '';
+    li.innerHTML = `<span>${ex.name}</span><span>${ex.reps}${w}</span>`;
+    el.appendChild(li);
+  });
+}
+fillList(document.getElementById('kbList'), day.exercises);
+fillList(document.getElementById('stList'), [...STRETCH.base, ...sday.exercises]);
 
-/* ---------- Écrans d'exercices ---------- */
+/* ---------- Construction du feed ---------- */
 const feed = document.getElementById('feed');
 const rail = document.getElementById('rail');
 const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
 
-day.exercises.forEach((ex, i) => {
+const flow = [
+  ...day.exercises.map((ex) => ({ ...ex, group: `Jour ${letter} · ${day.title}` })),
+  ...STRETCH.base.map((ex) => ({ ...ex, group: 'Étirements · Base' })),
+  ...sday.exercises.map((ex) => ({ ...ex, group: `Étirements · ${jletter}` })),
+];
+const N = flow.length;
+
+const exScreens = [];
+const rdots = [];
+const resetters = [];
+let congrats; // défini plus bas
+
+function goNext(idx) {
+  const target = idx + 1 < N ? exScreens[idx + 1] : congrats;
+  target.scrollIntoView({ behavior: 'smooth' });
+}
+
+function makeExercise(ex, i) {
+  const idx = i;               // position dans exScreens
+  const num = i + 1;           // numéro affiché (1..N)
   const s = document.createElement('section');
   s.className = 'screen ex';
-  s.dataset.index = String(i);
 
   const weight = ex.weight ? `<span class="weight">${ex.weight}</span>` : '';
-  const detail = ex.detail ? `<span class="detail">${ex.detail}</span>` : '';
+  const detail = ex.detail ? `<small>${ex.detail}</small>` : '';
   const note = ex.note ? `<p class="note">${ex.note}</p>` : '';
-  const hint = i === 0 ? '<div class="swipe-hint">↑ glisse pour l\'exercice suivant</div>' : '';
 
   s.innerHTML = `
     <div class="player" data-video="${ex.video}">
@@ -129,61 +175,70 @@ day.exercises.forEach((ex, i) => {
       </button>
     </div>
     <div class="overlay-top">
-      <span class="pill"><span class="dayletter">Jour ${letter}</span> · ${day.title}</span>
-      <span class="pill">${i + 1} / ${total}</span>
+      <span class="pill">${ex.group}</span>
+      <span class="pill">${num} / ${N}</span>
     </div>
-    ${hint}
     <div class="overlay-bottom">
       <div class="ex-head"><h2 class="ex-name">${ex.name}</h2>${weight}</div>
-      <div class="scheme"><span class="reps">${ex.reps}</span>${detail}</div>
       ${note}
-      <div class="sets"></div>
-      <a class="yt-fallback" target="_blank" rel="noopener"
-         href="https://www.youtube.com/results?search_query=${encodeURIComponent(ex.q)}">Voir d'autres vidéos ↗</a>
+      <button class="reps-badge" aria-label="Valider une série">
+        <span class="rb-count">${ex.sets}</span>
+        <span class="rb-scheme">${ex.reps}${detail}</span>
+      </button>
     </div>
   `;
 
-  // suivi des séries
-  const setsEl = s.querySelector('.sets');
-  if (ex.sets > 1) {
-    for (let k = 0; k < ex.sets; k++) {
-      const b = document.createElement('button');
-      b.className = 'set' + (isDone(i, k) ? ' done' : '');
-      b.textContent = String(k + 1);
-      b.addEventListener('click', () => { toggle(i, k); b.classList.toggle('done'); });
-      setsEl.appendChild(b);
-    }
-  } else {
-    const b = document.createElement('button');
-    b.className = 'set wide' + (isDone(i, 0) ? ' done' : '');
-    b.textContent = isDone(i, 0) ? 'Terminé ✓' : 'Marquer comme fait';
-    b.addEventListener('click', () => {
-      toggle(i, 0);
-      const d = isDone(i, 0);
-      b.classList.toggle('done', d);
-      b.textContent = d ? 'Terminé ✓' : 'Marquer comme fait';
-    });
-    setsEl.appendChild(b);
-  }
-
-  // clic manuel sur la vidéo (secours si l'autoplay est bloqué)
+  // Lecture vidéo au tap (fiable partout : c'est un geste utilisateur).
   s.querySelector('.poster').addEventListener('click', () => loadVideo(s));
 
-  feed.appendChild(s);
+  // Compteur de séries : chaque tap décrémente ; 0 = terminé → exercice suivant.
+  const badge = s.querySelector('.reps-badge');
+  const countEl = s.querySelector('.rb-count');
+  let left = ex.sets;
+  const render = () => {
+    countEl.textContent = left <= 0 ? '✓' : String(left);
+    badge.classList.toggle('done', left <= 0);
+  };
+  badge.addEventListener('click', () => {
+    if (left <= 0) return;
+    left -= 1;
+    render();
+    if (left <= 0) setTimeout(() => goNext(idx), 650);
+  });
+  resetters.push(() => { left = ex.sets; render(); });
 
   const rdot = document.createElement('button');
   rdot.className = 'rdot';
   rdot.addEventListener('click', () => s.scrollIntoView({ behavior: 'smooth' }));
   rail.appendChild(rdot);
-});
 
-const screens = [...feed.querySelectorAll('.ex')];
-const rdots = [...rail.children];
+  exScreens.push(s);
+  rdots.push(rdot);
+  feed.appendChild(s);
+}
 
-/* ---------- Chargement / déchargement des vidéos (une seule active) ---------- */
+function appendSection(html, cls) {
+  const s = document.createElement('section');
+  s.className = `screen ${cls}`;
+  s.innerHTML = `<div class="section-inner">${html}</div>`;
+  feed.appendChild(s);
+  return s;
+}
+
+flow.forEach((ex, i) => makeExercise(ex, i));
+
+congrats = appendSection(
+  `<div class="emoji">💪</div>
+   <h1>Séance terminée !</h1>
+   <p>Bravo — Jour ${letter} + étirements ${jletter} bouclés.</p>
+   <button class="start" id="restart">Recommencer</button>`,
+  'congrats',
+);
+
+/* ---------- Vidéos : une seule chargée à la fois ---------- */
 function embedURL(id) {
   const p = new URLSearchParams({
-    autoplay: '1', mute: '1', loop: '1', playlist: id,
+    autoplay: '1', loop: '1', playlist: id,
     controls: '1', rel: '0', playsinline: '1', modestbranding: '1', iv_load_policy: '3',
   });
   return `https://www.youtube-nocookie.com/embed/${id}?${p}`;
@@ -197,6 +252,8 @@ function loadVideo(section) {
   iframe.title = section.querySelector('.ex-name').textContent;
   iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
   iframe.allowFullscreen = true;
+  // Requis depuis fin 2025 : YouTube exige un referrer valide, sinon "Error 153".
+  iframe.referrerPolicy = 'strict-origin-when-cross-origin';
   p.appendChild(iframe);
 }
 function unloadVideo(section) {
@@ -210,31 +267,36 @@ function unloadVideo(section) {
 let active = -1;
 function setActive(idx) {
   if (idx === active) return;
-  if (active >= 0) unloadVideo(screens[active]);
+  if (active >= 0) unloadVideo(exScreens[active]); // stoppe la vidéo qu'on quitte
   active = idx;
   rdots.forEach((d, i) => d.classList.toggle('active', i === idx));
   rail.classList.toggle('hidden', idx < 0);
-  if (idx >= 0) loadVideo(screens[idx]);
 }
 
 const io = new IntersectionObserver((entries) => {
   for (const e of entries) {
     if (e.isIntersecting && e.intersectionRatio >= 0.6) {
-      setActive(e.target.classList.contains('ex') ? screens.indexOf(e.target) : -1);
+      setActive(e.target.classList.contains('ex') ? exScreens.indexOf(e.target) : -1);
     }
   }
 }, { root: feed, threshold: [0.6] });
-io.observe(document.getElementById('intro'));
-screens.forEach((s) => io.observe(s));
+[...feed.querySelectorAll('.screen')].forEach((s) => io.observe(s));
 
 /* ---------- Navigation ---------- */
-document.getElementById('start').addEventListener('click', () => {
-  screens[0].scrollIntoView({ behavior: 'smooth' });
+const intro = document.getElementById('intro');
+document.getElementById('start').addEventListener('click', () => exScreens[0].scrollIntoView({ behavior: 'smooth' }));
+document.getElementById('restart').addEventListener('click', () => {
+  resetters.forEach((fn) => fn());
+  intro.scrollIntoView({ behavior: 'smooth' });
 });
 window.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); screens[Math.min(active + 1, total - 1)]?.scrollIntoView({ behavior: 'smooth' }); }
-  if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); (active <= 0 ? document.getElementById('intro') : screens[active - 1]).scrollIntoView({ behavior: 'smooth' }); }
+  if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); (active + 1 < N ? exScreens[active + 1] : congrats).scrollIntoView({ behavior: 'smooth' }); }
+  if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); (active <= 0 ? intro : exScreens[active - 1]).scrollIntoView({ behavior: 'smooth' }); }
 });
+
+/* On repart toujours du haut au chargement. */
+feed.scrollTop = 0;
+window.addEventListener('load', () => { feed.scrollTop = 0; });
 
 /* ---------- Astuce d'installation (iOS, hors mode standalone) ---------- */
 const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;

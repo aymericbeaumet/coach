@@ -4,8 +4,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Coach</title>
-<meta name="description" content="Programme kettlebell A/B/C — la séance du jour en vidéos, format court." />
+<meta name="description" content="Coach — la séance du jour : kettlebell + étirements, en vidéos." />
 <meta name="theme-color" content="#0f172a" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
 
 <!-- iOS PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -23,16 +24,35 @@
   <section class="screen intro" id="intro">
     <div class="intro-inner">
       <div class="date" id="date"></div>
-      <div class="badge-big" id="badge">A</div>
-      <h1 id="title">Jour A</h1>
-      <p class="subtitle" id="subtitle"></p>
-      <ol class="preview" id="preview"></ol>
+
+      <section class="block">
+        <div class="block-head">
+          <span class="badge" id="kbBadge">A</span>
+          <div>
+            <h2 id="kbTitle">Kettlebell — Jour A</h2>
+            <p id="kbSub"></p>
+          </div>
+        </div>
+        <ol class="preview" id="kbList"></ol>
+      </section>
+
+      <section class="block">
+        <div class="block-head">
+          <span class="badge alt" id="stBadge">J1</span>
+          <div>
+            <h2 id="stTitle">Étirements — J1</h2>
+            <p id="stSub"></p>
+          </div>
+        </div>
+        <ol class="preview" id="stList"></ol>
+      </section>
+
       <button class="start" id="start">Commencer la séance</button>
       <p class="hint" id="tomorrow"></p>
       <p class="hint" id="install" hidden>Partager → « Sur l'écran d'accueil » pour installer</p>
     </div>
   </section>
-  <!-- écrans d'exercices injectés ici -->
+  <!-- écrans injectés ici -->
 </div>
 
 <div class="rail hidden" id="rail" aria-hidden="true"></div>
