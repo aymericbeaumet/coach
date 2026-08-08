@@ -1,4 +1,4 @@
-const CACHE = 'kb-v1';
+const CACHE = 'coach-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -27,14 +27,12 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
   // Ne gère que l'app shell (même origine) ; YouTube passe directement au réseau.
   if (new URL(req.url).origin !== location.origin) return;
+  // Réseau d'abord (toujours à jour), cache en secours hors-ligne.
   e.respondWith(
-    caches.match(req).then((cached) =>
-      cached ||
-      fetch(req).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((c) => c.put(req, copy));
-        return res;
-      }).catch(() => caches.match('./index.html'))
-    )
+    fetch(req).then((res) => {
+      const copy = res.clone();
+      caches.open(CACHE).then((c) => c.put(req, copy));
+      return res;
+    }).catch(() => caches.match(req).then((cached) => cached || caches.match('./index.html')))
   );
 });
