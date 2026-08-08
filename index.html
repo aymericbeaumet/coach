@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Kettlebell</title>
+<meta name="description" content="Programme kettlebell A/B/C — la séance du jour en vidéos, format court." />
+<meta name="theme-color" content="#0f172a" />
+
+<!-- iOS PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Kettlebell" />
+
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="feed" id="feed">
+  <section class="screen intro" id="intro">
+    <div class="intro-inner">
+      <div class="date" id="date"></div>
+      <div class="badge-big" id="badge">A</div>
+      <h1 id="title">Jour A</h1>
+      <p class="subtitle" id="subtitle"></p>
+      <ol class="preview" id="preview"></ol>
+      <button class="start" id="start">Commencer la séance</button>
+      <p class="hint" id="tomorrow"></p>
+      <p class="hint" id="install" hidden>Partager → « Sur l'écran d'accueil » pour installer</p>
+    </div>
+  </section>
+  <!-- écrans d'exercices injectés ici -->
+</div>
+
+<div class="rail hidden" id="rail" aria-hidden="true"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
