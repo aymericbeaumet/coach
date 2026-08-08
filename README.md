@@ -1,4 +1,4 @@
-# Kettlebell
+# Coach
 
 PWA minimaliste (sans framework — HTML/CSS/JS) qui affiche **la séance du jour**
 d'un programme kettlebell qui tourne en **A → B → C → A …** de façon déterministe.
@@ -33,4 +33,4 @@ node tools/gen-icons.mjs
 ## Déploiement
 
 GitHub Pages via GitHub Actions (`.github/workflows/deploy.yml`) à chaque push sur `main`.
-Domaine : <https://kettlebell.aymericbeaumet.com> (fichier `CNAME`).
+Domaine : <https://coach.aymericbeaumet.com> (fichier `CNAME`).

@@ -1,6 +1,6 @@
 {
-  "name": "Kettlebell — séance du jour",
-  "short_name": "Kettlebell",
+  "name": "Coach — séance du jour",
+  "short_name": "Coach",
   "description": "Programme kettlebell A/B/C, la séance du jour en vidéos format court.",
   "lang": "fr",
   "start_url": "./?source=pwa",
