@@ -12,10 +12,14 @@ le tout de façon déterministe.
 - **Format court** : chaque exercice est un écran plein avec sa vidéo d'exemple
   (autoplay avec son + boucle ; lecteur YouTube épuré). On **glisse verticalement**
   pour naviguer ; sur ordinateur, toute la page capte le défilement, y compris la vidéo.
-- **Compteur de séries** : le badge centré en bas se tape pour décompter jusqu'à 0 ;
-  à 0 l'exercice passe automatiquement au suivant. Un message de fin clôt la séance.
-- **Chrono** : sur les exercices en secondes, un minuteur en haut à droite peut être
-  lancé ; à 0 il décrémente le compteur de séries (usage optionnel).
+- **Tours guidés** : les triplets et flows sont déroulés dans leur ordre réel
+  (mouvement 1 → mouvement 2 → mobilité → tour suivant). Chaque côté a son propre
+  écran ; le tour courant et le côté à travailler sont toujours affichés, sans
+  transition à mémoriser.
+- **Validation** : le bouton du bas valide le passage courant et avance automatiquement
+  vers le mouvement suivant. Un message de fin clôt la séance.
+- **Chrono** : sur les exercices en secondes, un minuteur en bas à droite peut être
+  lancé ; à 0 il valide le passage et avance (usage optionnel).
 - **Sans état** : rafraîchir la page redémarre la séance depuis le début.
 - **Installable** sur iPhone : Partager → « Sur l'écran d'accueil ».
 - **Plein écran mobile** : fond bord à bord sous l'encoche et l'indicateur d'accueil,
