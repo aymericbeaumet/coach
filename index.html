@@ -4,9 +4,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Coach</title>
-<meta name="description" content="Coach — la séance du jour : kettlebell + étirements, en vidéos." />
-<meta name="theme-color" content="#0f172a" />
+<meta name="description" content="Coach — échauffement et séance du jour, en vidéos." />
+<meta name="theme-color" content="#20242c" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
+<meta name="color-scheme" content="dark" />
+<meta name="format-detection" content="telephone=no" />
+<style>html,body{margin:0;min-height:100%;background:#20242c}</style>
 
 <!-- iOS PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -14,48 +17,56 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Coach" />
 
-<link rel="manifest" href="manifest.webmanifest" />
-<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png" />
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<link rel="manifest" href="manifest.webmanifest?v=20260811" />
+<link rel="icon" href="icons/icon-32.png?v=20260811" sizes="32x32" type="image/png" />
+<link rel="icon" href="icons/icon-192.png?v=20260811" sizes="192x192" type="image/png" />
+<link rel="icon" href="icons/icon-512.png?v=20260811" sizes="512x512" type="image/png" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=20260811" sizes="180x180" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 <div class="feed" id="feed">
   <section class="screen intro" id="intro">
     <div class="intro-inner">
-      <div class="date" id="date"></div>
+      <header class="intro-brand">
+        <img class="app-logo" src="icons/icon-192.png?v=20260811" width="84" height="84" alt="Coach" />
+        <div class="date" id="date"></div>
+      </header>
 
       <section class="block">
         <div class="block-head">
-          <span class="badge">🏋️</span>
           <div>
-            <h2>Kettlebell</h2>
-            <p id="kbSub"></p>
+            <h2 id="warmupTitle"></h2>
           </div>
         </div>
-        <ol class="preview" id="kbList"></ol>
+        <ol class="preview" id="warmupList"></ol>
       </section>
 
       <section class="block">
         <div class="block-head">
-          <span class="badge alt">🧘</span>
           <div>
-            <h2>Étirements</h2>
-            <p id="stSub"></p>
+            <h2>Séance</h2>
           </div>
         </div>
-        <ol class="preview" id="stList"></ol>
+        <ol class="preview" id="programList"></ol>
       </section>
 
-      <button class="start" id="start">Commencer la séance</button>
+      <div class="session-footer">
+        <div class="session-estimate" aria-label="Estimation de la séance">
+          <div><strong id="durationEstimate"></strong><span>Durée estimée</span></div>
+          <div><strong id="finishEstimate"></strong><span>Fin estimée</span></div>
+        </div>
+        <button class="start" id="start">Commencer la séance</button>
+      </div>
       <p class="hint" id="install" hidden>Partager → « Sur l'écran d'accueil » pour installer</p>
     </div>
   </section>
   <!-- écrans injectés ici -->
 </div>
 
+<div class="active-video" id="activeVideo" hidden></div>
 <div class="rail hidden" id="rail" aria-hidden="true"></div>
 
-<script src="app.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
