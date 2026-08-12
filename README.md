@@ -1,11 +1,12 @@
 # Coach+
 
 PWA minimaliste (sans framework — HTML/CSS/JS) qui affiche **la séance du jour** :
-un échauffement commun suivi du programme kettlebell en rotation **A → B → C → D**,
-le tout de façon déterministe.
+un échauffement commun suivi d'un programme en rotation
+**A → B → C → D → E → F**, le tout de façon déterministe.
 
 - **Rotations** : le 11 août 2026 = Jour A. Chaque jour civil avance d'un cran
   (`program.js`). Aucun serveur applicatif.
+- **Environ 20 minutes** : 4 minutes d'échauffement puis 16 minutes de séance.
 - **Écran d'accueil** : deux sections (Échauffement + Séance) avec l'aperçu du jour
   regroupé par blocs, une estimation de durée et d'heure de fin, puis un bouton
   *Commencer*. L'accueil s'adapte à la hauteur disponible et reste verrouillé jusqu'au clic.
@@ -36,14 +37,22 @@ le tout de façon déterministe.
 
 Chaque jour commence par `WARMUP`, puis :
 
-- **Jour A — poussée + charnière** : swings, pompes, gainage, isométrie et mobilité thoracique.
-- **Jour B — tirage + squat** : tractions, split squat, rowing et mobilité des hanches.
-- **Jour C — vertical + gainage suspendu** : get-up, développé, gainage et mobilité.
-- **Jour D — mobilité longue** : flow chargé et tenues longues.
+- **Jour A — poussée + charnière** : soulevé de terre contrôlé, pompes, stabilité et Balasana/Pavanamuktasana.
+- **Jour B — tirage + jambes** : tractions, split squat, rowing, gainage latéral et mobilité des hanches.
+- **Jour C — vertical + stabilité** : get-up, portage, développé, gainage suspendu et Ardha Matsyendrasana.
+- **Jour D — force douce + mobilité** : enchaînement léger puis passage long dans les quatre postures du dos.
+- **Jour E — chaîne postérieure + tirage** : pont fessier, rowing, bird-dog, gainage et souplesse douce.
+- **Jour F — jambes + stabilité** : goblet/Cossack squat, portage, bird-dog et mobilité des chevilles et du dos.
+
+La boucle équilibre force, musculation, stabilité, mobilité et souplesse. Les mouvements
+chargés restent sous-maximaux, avec 2 à 3 répétitions propres en réserve. Pour un dos
+sensible, rester dans une amplitude confortable et réduire la charge, raccourcir le
+mouvement ou passer un exercice qui augmente nettement la douleur. Ce programme général
+ne remplace pas un avis médical ou une prise en charge individualisée.
 
 Tout le programme se modifie dans [`program.js`](program.js), un module de configuration
 lisible sans la verbosité du JSON. `WARMUP` contient l'échauffement commun et `PROGRAM`
-les jours A/B/C/D. Chaque exercice a un `video` (l'ID YouTube), peut avoir `start` / `end`
+les jours A à F. Chaque exercice a un `video` (l'ID YouTube), peut avoir `start` / `end`
 pour retirer une intro ou une conclusion, et un `block` pour regrouper les exercices.
 Les `estimatedMinutes` alimentent l'estimation affichée sur l'accueil.
 

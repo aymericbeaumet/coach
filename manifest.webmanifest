@@ -1,7 +1,7 @@
 {
   "name": "Coach+ — séance du jour",
   "short_name": "Coach+",
-  "description": "Échauffement puis programme kettlebell, la séance du jour en vidéos.",
+  "description": "Séance quotidienne équilibrée de force, stabilité, mobilité et souplesse, en vidéos.",
   "lang": "fr",
   "start_url": "./?source=pwa",
   "scope": "./",
@@ -10,8 +10,8 @@
   "background_color": "#20242c",
   "theme_color": "#20242c",
   "icons": [
-    { "src": "icons/icon-192.png?v=20260811", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png?v=20260811", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png?v=20260811", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icons/icon-192.png?v=20260812", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png?v=20260812", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png?v=20260812", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

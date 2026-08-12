@@ -1,15 +1,15 @@
-const CACHE = 'coach-v10';
+const CACHE = 'coach-v11';
 const ASSETS = [
   './',
   './index.html',
   './app.js',
   './program.js',
   './styles.css',
-  './manifest.webmanifest?v=20260811',
-  './icons/icon-32.png?v=20260811',
-  './icons/icon-192.png?v=20260811',
-  './icons/icon-512.png?v=20260811',
-  './icons/apple-touch-icon.png?v=20260811',
+  './manifest.webmanifest?v=20260812',
+  './icons/icon-32.png?v=20260812',
+  './icons/icon-192.png?v=20260812',
+  './icons/icon-512.png?v=20260812',
+  './icons/apple-touch-icon.png?v=20260812',
 ];
 
 self.addEventListener('install', (e) => {
