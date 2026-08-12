@@ -1,6 +1,6 @@
 {
-  "name": "Coach — séance du jour",
-  "short_name": "Coach",
+  "name": "Coach+ — séance du jour",
+  "short_name": "Coach+",
   "description": "Échauffement puis programme kettlebell, la séance du jour en vidéos.",
   "lang": "fr",
   "start_url": "./?source=pwa",

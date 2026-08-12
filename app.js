@@ -1,7 +1,7 @@
 import { PROGRAM, ROTATION, WARMUP } from './program.js';
 
 /* ---------------------------------------------------------------------------
- * Coach — la séance du jour.
+ * Coach+ — la séance du jour.
  *   • Échauffement commun, puis rotation interne définie dans program.js
  * Rotations déterministes (+1 cran / jour civil). Détail interne, jamais montré.
  * Aucun état conservé : rafraîchir redémarre la séance depuis le début.
@@ -72,6 +72,9 @@ setInterval(updateFinishEstimate, 60000);
 /* ---------- Construction du feed ---------- */
 const feed = document.getElementById('feed');
 const rail = document.getElementById('rail');
+const sessionProgress = document.getElementById('sessionProgress');
+const sessionProgressFill = sessionProgress.querySelector('span');
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
 const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 4 4L19 6"/></svg>';
 const TIMER_PLAY_ICON = '<svg class="timer-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
@@ -290,6 +293,7 @@ feed.appendChild(congrats);
 
 /* ---------- Vidéos : une seule active (autoplay avec son + boucle) ---------- */
 const activeVideo = document.getElementById('activeVideo');
+const soundUnlock = document.getElementById('soundUnlock');
 let activeVideoSection = null;
 let youtubePlayer = null;
 let youtubePlayerReady = false;
@@ -345,9 +349,9 @@ function requestAudiblePlayback(section, player = youtubePlayer) {
   setTimeout(() => {
     if (activeVideoSection !== section || container.dataset.audio !== 'requested') return;
     container.dataset.audio = 'blocked';
-    activeVideo.classList.remove('youtube-paused');
+    activeVideo.classList.remove('video-playing');
     activeVideo.classList.add('autoplay-blocked');
-    player.getIframe().tabIndex = 0;
+    soundUnlock.hidden = false;
   }, 3500);
 }
 
@@ -380,9 +384,20 @@ function playerContext(player) {
   return { section: activeVideoSection, container };
 }
 
+function syncVideoTitle(section, player = youtubePlayer) {
+  if (!section || !player) return;
+  player.getIframe().title = section.querySelector('.ex-name').textContent;
+}
+
+function videoMatchesSection(section, player = youtubePlayer) {
+  if (!section || !player) return false;
+  return player.getVideoData?.().video_id === section.querySelector('.player').dataset.video;
+}
+
 function playSectionVideo(section) {
   if (!youtubePlayerReady || section !== activeVideoSection) return;
   stopVideoLoopGuard();
+  syncVideoTitle(section);
   youtubePlayer.loadVideoById(videoRequest(section));
   requestAudiblePlayback(section);
 }
@@ -448,32 +463,41 @@ function attachYouTubePlayer(iframe) {
           const context = playerContext(event.target);
           if (!context) return;
           const { section, container } = context;
+          syncVideoTitle(section, event.target);
           container.dataset.playerState = String(event.data);
           if (event.data === YT.PlayerState.PLAYING) {
             disableYouTubeCaptions(event.target);
             event.target.unMute();
             event.target.setVolume(100);
             container.dataset.audio = event.target.isMuted() ? 'muted' : 'on';
-            activeVideo.classList.remove('autoplay-blocked', 'youtube-paused');
+            activeVideo.classList.remove('autoplay-blocked');
+            activeVideo.classList.add('video-playing');
+            soundUnlock.hidden = true;
             event.target.getIframe().tabIndex = -1;
             startVideoLoopGuard(section, event.target);
           }
           if (event.data === YT.PlayerState.PAUSED) {
-            // YouTube injecte « More videos » dans l'iframe en pause. Masquer
-            // brièvement le lecteur et relancer évite de montrer cette UI.
-            activeVideo.classList.add('youtube-paused');
+            // YouTube injecte « More videos » dans l'iframe en pause. Le lecteur
+            // reste masqué tant qu'il n'émet pas de nouveau PLAYING.
+            activeVideo.classList.remove('video-playing');
             if (!document.hidden) requestAudiblePlayback(section, event.target);
           }
-          if (event.data === YT.PlayerState.ENDED) restartSectionVideo(section, event.target);
+          if (event.data === YT.PlayerState.BUFFERING || event.data === YT.PlayerState.CUED) {
+            activeVideo.classList.remove('video-playing');
+          }
+          if (event.data === YT.PlayerState.ENDED) {
+            activeVideo.classList.remove('video-playing');
+            restartSectionVideo(section, event.target);
+          }
         },
         onApiChange: (event) => disableYouTubeCaptions(event.target),
         onAutoplayBlocked: (event) => {
           const context = playerContext(event.target);
           if (!context) return;
           context.container.dataset.audio = 'blocked';
-          activeVideo.classList.remove('youtube-paused');
+          activeVideo.classList.remove('video-playing');
           activeVideo.classList.add('autoplay-blocked');
-          event.target.getIframe().tabIndex = 0;
+          soundUnlock.hidden = false;
         },
         onError: (event) => {
           const context = playerContext(event.target);
@@ -497,7 +521,8 @@ function loadVideo(section) {
   container.dataset.loaded = '1';
   activeVideoSection = section;
   activeVideo.hidden = false;
-  activeVideo.classList.remove('autoplay-blocked', 'youtube-paused');
+  activeVideo.classList.remove('autoplay-blocked', 'video-playing');
+  soundUnlock.hidden = true;
 
   const title = section.querySelector('.ex-name').textContent;
   const existingIframe = activeVideo.querySelector('iframe');
@@ -534,9 +559,14 @@ function unloadVideo(section) {
   activeVideoSection = null;
   stopVideoLoopGuard();
   activeVideo.hidden = true;
-  activeVideo.classList.remove('autoplay-blocked');
+  activeVideo.classList.remove('autoplay-blocked', 'video-playing');
+  soundUnlock.hidden = true;
   if (youtubePlayerReady) youtubePlayer.pauseVideo();
 }
+
+soundUnlock.addEventListener('click', () => {
+  if (activeVideoSection) requestAudiblePlayback(activeVideoSection);
+});
 
 // Précharge l'API : elle est normalement prête quand l'utilisateur touche « Commencer ».
 loadYouTubeAPI().catch(() => {});
@@ -553,14 +583,23 @@ function setActive(idx) {
   const inSession = idx >= 0 && idx < N;
   document.documentElement.classList.toggle('in-session', inSession);
   themeColor.content = inSession ? '#000000' : '#20242c';
+  const progress = idx < 0 ? 0 : (idx >= N ? 1 : (idx + 1) / N);
+  sessionProgressFill.style.transform = `scaleX(${progress})`;
+  sessionProgress.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
   rdots.forEach((d, i) => d.classList.toggle('active', i === idx));
   rail.classList.toggle('hidden', idx < 0 || idx >= N);
   if (idx >= 0 && idx < N && sessionStarted) loadVideo(exScreens[idx]);
 }
 
 const io = new IntersectionObserver((entries) => {
+  if (navigationTarget !== null) return;
   for (const e of entries) {
     if (e.isIntersecting && e.intersectionRatio >= 0.6) {
+      if (!sessionStarted && e.target !== intro) {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        setActive(-1);
+        return;
+      }
       if (e.target === congrats) setActive(N);
       else setActive(e.target.classList.contains('ex') ? exScreens.indexOf(e.target) : -1);
     }
@@ -570,44 +609,81 @@ const io = new IntersectionObserver((entries) => {
 
 /* ---------- Navigation ---------- */
 const intro = document.getElementById('intro');
+let navigationTarget = null;
+let navigationFallback = null;
 function screenAt(idx) {
   if (idx < 0) return intro;
   if (idx >= N) return congrats;
   return exScreens[idx];
 }
-function scrollToScreen(idx) {
-  screenAt(idx).scrollIntoView({ behavior: 'smooth', block: 'start' });
+function finishNavigation() {
+  if (navigationTarget === null) return;
+  const target = navigationTarget;
+  navigationTarget = null;
+  if (navigationFallback) clearTimeout(navigationFallback);
+  navigationFallback = null;
+  document.documentElement.classList.remove('is-navigating');
+  setActive(target);
+  if (target >= 0 && target < N && sessionStarted && !videoMatchesSection(exScreens[target])) {
+    loadVideo(exScreens[target]);
+  }
+}
+function scrollToScreen(idx, behavior = 'smooth') {
+  const target = Math.max(-1, Math.min(N, idx));
+  const scrollBehavior = reducedMotion.matches ? 'instant' : behavior;
+  navigationTarget = target;
+  document.documentElement.classList.add('is-navigating');
+  setActive(target);
+  screenAt(target).scrollIntoView({ behavior: scrollBehavior, block: 'start' });
+  if (navigationFallback) clearTimeout(navigationFallback);
+  navigationFallback = setTimeout(finishNavigation, scrollBehavior === 'smooth' ? 900 : 0);
 }
 function moveBy(direction) {
-  if (active < 0) {
+  const current = navigationTarget ?? active;
+  if (current < 0) {
     if (direction > 0) scrollToScreen(0);
     return;
   }
-  scrollToScreen(Math.max(-1, Math.min(N, active + direction)));
+  scrollToScreen(current + direction);
 }
+window.addEventListener('scrollend', finishNavigation);
 document.getElementById('start').addEventListener('click', () => {
   sessionStarted = true;
+  document.documentElement.classList.add('session-started');
   loadVideo(exScreens[0]);
   scrollToScreen(0);
 });
 document.getElementById('restart').addEventListener('click', () => {
   resetters.forEach((fn) => fn());
+  sessionStarted = false;
+  document.documentElement.classList.remove('session-started');
   scrollToScreen(-1);
 });
 window.addEventListener('keydown', (e) => {
+  if (!sessionStarted) {
+    if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' ', 'Home', 'End'].includes(e.key)) e.preventDefault();
+    return;
+  }
   if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); moveBy(1); }
   if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); moveBy(-1); }
 });
 
 let wheelDelta = 0;
 let wheelRelease;
+function releaseWheel() {
+  wheelRelease = null;
+  wheelDelta = 0;
+}
 window.addEventListener('wheel', (e) => {
-  // L'accueil peut dépasser la hauteur de l'écran : il garde son scroll naturel.
-  if (active < 0 || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+  if (!sessionStarted) {
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) e.preventDefault();
+    return;
+  }
+  if ((navigationTarget ?? active) < 0 || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
   e.preventDefault();
   if (wheelRelease) {
     clearTimeout(wheelRelease);
-    wheelRelease = setTimeout(() => { wheelRelease = null; }, 500);
+    wheelRelease = setTimeout(releaseWheel, 500);
     return;
   }
   wheelDelta += e.deltaY;
@@ -615,7 +691,7 @@ window.addEventListener('wheel', (e) => {
   const direction = Math.sign(wheelDelta);
   wheelDelta = 0;
   moveBy(direction);
-  wheelRelease = setTimeout(() => { wheelRelease = null; }, 500);
+  wheelRelease = setTimeout(releaseWheel, 500);
 }, { passive: false });
 
 window.scrollTo(0, 0);
@@ -627,5 +703,12 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !standalone) document.getEle
 
 /* ---------- Service worker ---------- */
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  if (import.meta.env?.DEV) {
+    // Un ancien SW de production peut mettre en cache les modules et casser le HMR.
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((registration) => registration.unregister());
+    });
+  } else {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  }
 }

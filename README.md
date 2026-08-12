@@ -1,4 +1,4 @@
-# Coach
+# Coach+
 
 PWA minimaliste (sans framework — HTML/CSS/JS) qui affiche **la séance du jour** :
 un échauffement commun suivi du programme kettlebell en rotation **A → B → C → D**,
@@ -8,10 +8,12 @@ le tout de façon déterministe.
   (`program.js`). Aucun serveur applicatif.
 - **Écran d'accueil** : deux sections (Échauffement + Séance) avec l'aperçu du jour
   regroupé par blocs, une estimation de durée et d'heure de fin, puis un bouton
-  *Commencer*.
+  *Commencer*. L'accueil s'adapte à la hauteur disponible et reste verrouillé jusqu'au clic.
 - **Format court** : chaque exercice est un écran plein avec sa vidéo d'exemple
-  (autoplay avec son + boucle ; lecteur YouTube épuré). On **glisse verticalement**
+  (autoplay avec son + boucle ; seule l'image vidéo est visible). On **glisse verticalement**
   pour naviguer ; sur ordinateur, toute la page capte le défilement, y compris la vidéo.
+- **Progression** : une barre orange de 3 px, tout en haut de l'écran, avance avec
+  chaque passage de la séance.
 - **Tours guidés** : les triplets et flows sont déroulés dans leur ordre réel
   (mouvement 1 → mouvement 2 → mobilité → tour suivant). Chaque côté a son propre
   écran ; le tour courant et le côté à travailler sont toujours affichés, sans
@@ -51,12 +53,28 @@ les démonstrations qui contiennent une introduction ou une conclusion.
 
 ## Développement local
 
-Ouvrir `index.html` en `file://` ne fonctionne pas (le service worker et les vidéos
-YouTube exigent une vraie origine http). Lancer un petit serveur :
+Installer les dépendances puis lancer le serveur Vite avec rechargement automatique :
 
 ```sh
-./serve.sh          # http://localhost:8000
+npm install
+npm run dev         # http://localhost:5173
 ```
+
+Le serveur écoute aussi sur le réseau local pour tester la PWA depuis un téléphone.
+En développement, les anciens service workers sont automatiquement désinscrits afin
+qu'ils n'interfèrent pas avec le rechargement à chaud.
+
+Pour vérifier la version statique de production :
+
+```sh
+npm run build
+npm run preview
+```
+
+Le déploiement GitHub Pages continue à publier directement les fichiers source du
+dépôt ; `dist/` sert uniquement à vérifier localement que Vite compile correctement.
+
+`./serve.sh` reste disponible comme serveur statique minimal, sans rechargement.
 
 ## Logo et icônes
 
