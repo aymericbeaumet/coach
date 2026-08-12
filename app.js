@@ -679,7 +679,7 @@ window.addEventListener('wheel', (e) => {
     if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) e.preventDefault();
     return;
   }
-  if ((navigationTarget ?? active) < 0 || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+  if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
   e.preventDefault();
   if (wheelRelease) {
     clearTimeout(wheelRelease);
@@ -693,6 +693,35 @@ window.addEventListener('wheel', (e) => {
   moveBy(direction);
   wheelRelease = setTimeout(releaseWheel, 500);
 }, { passive: false });
+
+let touchStartX = null;
+let touchStartY = null;
+let touchDeltaY = 0;
+function resetTouch() {
+  touchStartX = null;
+  touchStartY = null;
+  touchDeltaY = 0;
+}
+window.addEventListener('touchstart', (e) => {
+  if (!sessionStarted || e.touches.length !== 1) return;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  touchDeltaY = 0;
+}, { passive: true });
+window.addEventListener('touchmove', (e) => {
+  if (!sessionStarted || touchStartY === null || e.touches.length !== 1) return;
+  const deltaX = e.touches[0].clientX - touchStartX;
+  touchDeltaY = touchStartY - e.touches[0].clientY;
+  if (Math.abs(touchDeltaY) <= Math.abs(deltaX) || Math.abs(touchDeltaY) < 6) return;
+  // La page ne se déplace jamais librement : le geste sera résolu vers un écran.
+  e.preventDefault();
+}, { passive: false });
+window.addEventListener('touchend', () => {
+  if (!sessionStarted || touchStartY === null) return;
+  if (Math.abs(touchDeltaY) >= 36) moveBy(Math.sign(touchDeltaY));
+  resetTouch();
+});
+window.addEventListener('touchcancel', resetTouch);
 
 window.scrollTo(0, 0);
 window.addEventListener('load', () => { window.scrollTo(0, 0); });

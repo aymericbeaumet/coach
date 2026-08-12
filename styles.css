@@ -79,6 +79,7 @@ body::before {
   background: var(--bg);
   touch-action: pan-y;
 }
+html.session-started .feed { touch-action: none; }
 
 .screen {
   position: relative;

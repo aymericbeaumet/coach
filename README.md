@@ -12,6 +12,9 @@ le tout de façon déterministe.
 - **Format court** : chaque exercice est un écran plein avec sa vidéo d'exemple
   (autoplay avec son + boucle ; seule l'image vidéo est visible). On **glisse verticalement**
   pour naviguer ; sur ordinateur, toute la page capte le défilement, y compris la vidéo.
+- **Navigation verrouillée** : après le démarrage, chaque geste tactile, coup de molette
+  ou touche avance d'un seul écran. Depuis le premier exercice, un geste vers le haut
+  revient à l'accueil sans désactiver la séance ni le snap.
 - **Progression** : une barre orange de 3 px, tout en haut de l'écran, avance avec
   chaque passage de la séance.
 - **Tours guidés** : les triplets et flows sont déroulés dans leur ordre réel
