@@ -79,6 +79,14 @@ const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14
 const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 4 4L19 6"/></svg>';
 const TIMER_PLAY_ICON = '<svg class="timer-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
 const TIMER_PAUSE_ICON = '<svg class="timer-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>';
+const COMPLETION_MESSAGES = [
+  'Bien joué — tu as tenu ton rendez-vous avec toi-même.',
+  'Une séance de plus dans la bonne direction.',
+  'Solide — force, mobilité et constance au rendez-vous.',
+  'Mission accomplie. Profite de cette victoire.',
+  'La régularité fait la différence — et aujourd’hui, c’est fait.',
+  'Tu l’as fait. Chaque séance compte.',
+];
 
 function shortBlockName(block) {
   return block?.split(' — ')[0] || '';
@@ -173,7 +181,6 @@ rail.classList.toggle('dense', N > 20);
 
 const exScreens = [];
 const rdots = [];
-const resetters = [];
 const chronoStoppers = [];
 let congrats;
 
@@ -261,9 +268,6 @@ function makeExercise(ex, i) {
     actions.classList.add('has-chrono');
     actions.appendChild(chrono);
     stopChrono = () => { if (timer) { clearInterval(timer); timer = null; paint(); } };
-    resetters.push(() => { done = false; renderCount(); if (timer) { clearInterval(timer); timer = null; } remaining = ex.seconds; paint(); });
-  } else {
-    resetters.push(() => { done = false; renderCount(); });
   }
   chronoStoppers.push(stopChrono);
 
@@ -280,14 +284,14 @@ function makeExercise(ex, i) {
 
 flow.forEach((ex, i) => makeExercise(ex, i));
 
+const completionMessage = COMPLETION_MESSAGES[Math.floor(Math.random() * COMPLETION_MESSAGES.length)];
 congrats = document.createElement('section');
 congrats.className = 'screen congrats';
 congrats.innerHTML = `
   <div class="section-inner">
     <div class="emoji">💪</div>
     <h1>Séance terminée !</h1>
-    <p>Bravo — échauffement et séance du jour bouclés.</p>
-    <button class="start" id="restart">Recommencer</button>
+    <p>${completionMessage}</p>
   </div>`;
 feed.appendChild(congrats);
 
@@ -652,12 +656,6 @@ document.getElementById('start').addEventListener('click', () => {
   document.documentElement.classList.add('session-started');
   loadVideo(exScreens[0]);
   scrollToScreen(0);
-});
-document.getElementById('restart').addEventListener('click', () => {
-  resetters.forEach((fn) => fn());
-  sessionStarted = false;
-  document.documentElement.classList.remove('session-started');
-  scrollToScreen(-1);
 });
 window.addEventListener('keydown', (e) => {
   if (!sessionStarted) {
